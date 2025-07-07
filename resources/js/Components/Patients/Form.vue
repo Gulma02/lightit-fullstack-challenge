@@ -37,6 +37,13 @@
             </div>
         </div>
     </Modal>
+
+    <Notification
+        :message="notificationMessage"
+        :type="notificationType"
+        :isVisible="showNotification"
+        @close="showNotification = false"
+    />
 </template>
 
 <script setup lang="ts">
@@ -49,12 +56,17 @@
     import PrimaryButton from "@/Components/PrimaryButton.vue";
     import SecondaryButton from "@/Components/SecondaryButton.vue";
     import PrefixSelect from "@/Components/Patients/PrefixSelect.vue";
+    import Notification from "@/Components/Notification.vue";
 
     defineProps<{
         modalVisible: boolean
     }>()
 
     const emit = defineEmits(['close', "update:patientList"])
+
+    const notificationMessage = ref('')
+    const notificationType = ref('info')
+    const showNotification = ref(false)
 
     const form = reactive({
         name: '',
@@ -80,6 +92,9 @@
         formData.append("prefix", form.prefix)
         // Agrego la imagen
         axios.post(route("user.store"), formData).then(response => {
+            notificationMessage.value = "Patient created successfully."
+            notificationType.value = "success"
+            showNotification.value = true
             emit("update:patientList", response.data.patient)
             emit("close")
         }).catch(error => {
@@ -87,6 +102,10 @@
                 Object.entries(error.response.data.errors).forEach(([key, value]) => {
                     errorList.value[key] = value[0]
                 })
+            } else {
+                notificationMessage.value = "There was an error creating the patient."
+                notificationType.value = "error"
+                showNotification.value = true
             }
         })
     }
