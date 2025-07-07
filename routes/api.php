@@ -1,8 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::group(["prefix" => "user"], function () {
+    Route::get("", [PatientController::class, "list"])->name("user.list");
+    Route::post("", [PatientController::class, "store"])->name("user.store");
+})->middleware(["auth:sanctum"]);
+
+Route::get("prefix", [PatientController::class, "prefixList"])->name("prefix.list");

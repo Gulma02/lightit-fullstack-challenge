@@ -1,0 +1,16 @@
+services:
+    app:
+        container_name: lightit_app
+        image: gulma/php-8.3.6-apache:1.4
+        ports:
+            - "80:80"
+            - "6001:6001"
+        volumes:
+            - ".:/var/www/html"
+    db:
+        container_name: lightit_db
+        image: mysql:8.0.36
+        environment:
+            - MYSQL_ROOT_PASSWORD=admin
+        ports:
+            - "3306:3306"
