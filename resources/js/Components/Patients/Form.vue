@@ -91,7 +91,11 @@
         formData.append("number", form.number)
         formData.append("prefix", form.prefix)
         // Agrego la imagen
-        axios.post(route("user.store"), formData).then(response => {
+        axios.post(route("user.store"), formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        }).then(response => {
             notificationMessage.value = "Patient created successfully."
             notificationType.value = "success"
             showNotification.value = true
